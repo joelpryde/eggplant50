@@ -1,9 +1,12 @@
 extends KinematicBody2D
 
 var pushing = false
+
 onready var tween = get_parent().get_parent().get_node("Tween")
 onready var world = get_node("/root/CGLO_World")
 onready var crateParent = get_node("/root/CGLO_World/CrateParent")
+var x = 0
+var y = 0
 
 func reset_pushing():
 	pushing = false

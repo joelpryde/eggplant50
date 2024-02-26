@@ -1,4 +1,4 @@
-[gd_scene load_steps=25 format=2]
+[gd_scene load_steps=22 format=2]
 
 [ext_resource path="res://games/CGOL/assets/block_07.png" type="Texture" id=1]
 [ext_resource path="res://games/CGOL/Player.gd" type="Script" id=2]
@@ -16,8 +16,6 @@
 [ext_resource path="res://games/CGOL/assets/player/player_10.png" type="Texture" id=14]
 [ext_resource path="res://games/CGOL/assets/player/player_09.png" type="Texture" id=15]
 [ext_resource path="res://games/CGOL/assets/environment_06.png" type="Texture" id=16]
-[ext_resource path="res://games/CGOL/Crate.gd" type="Script" id=17]
-[ext_resource path="res://games/CGOL/assets/crate_42.png" type="Texture" id=18]
 [ext_resource path="res://games/CGOL/CrateParent.gd" type="Script" id=19]
 
 [sub_resource type="ConvexPolygonShape2D" id=4]
@@ -72,9 +70,6 @@ animations = [ {
 [sub_resource type="RectangleShape2D" id=3]
 extents = Vector2( 20, 24 )
 
-[sub_resource type="RectangleShape2D" id=5]
-extents = Vector2( 24, 24 )
-
 [node name="CGLO_World" type="Node2D"]
 
 [node name="Background" type="TextureRect" parent="."]
@@ -111,35 +106,5 @@ animation = "down"
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Player"]
 shape = SubResource( 3 )
 
-[node name="Tween" type="Tween" parent="."]
-
 [node name="CrateParent" type="Node2D" parent="."]
 script = ExtResource( 19 )
-
-[node name="Crate" type="KinematicBody2D" parent="CrateParent"]
-position = Vector2( 96, 96 )
-scale = Vector2( 0.5, 0.5 )
-script = ExtResource( 17 )
-
-[node name="Sprite" type="Sprite" parent="CrateParent/Crate"]
-texture = ExtResource( 18 )
-centered = false
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="CrateParent/Crate"]
-position = Vector2( 32, 32 )
-shape = SubResource( 5 )
-
-[node name="Crate2" type="KinematicBody2D" parent="CrateParent"]
-position = Vector2( 192, 160 )
-scale = Vector2( 0.5, 0.5 )
-script = ExtResource( 17 )
-
-[node name="Sprite" type="Sprite" parent="CrateParent/Crate2"]
-texture = ExtResource( 18 )
-centered = false
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="CrateParent/Crate2"]
-position = Vector2( 32, 32 )
-shape = SubResource( 5 )
-
-[connection signal="tween_all_completed" from="Tween" to="CrateParent" method="_on_Tween_tween_all_completed"]
