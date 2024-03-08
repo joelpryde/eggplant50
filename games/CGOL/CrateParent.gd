@@ -1,16 +1,20 @@
 extends Node2D
 
 onready var crate_prefab = load("res://games/CGOL/Crate.tscn")
+onready var fill_prefab = load("res://games/CGOL/Fill.tscn")
 const grid_cell_size = 32
 const grid_width = 10
 const grid_height = 10
 var tweens_completed = true
+var filled = {}
 
 func _ready():
-	create_crate(3, 5)
-	create_crate(4, 6)
-	create_crate(5, 7)
-	create_crate(5, 8)
+	create_crate(2, 2)
+	create_crate(1, 3)
+	create_crate(1, 4)
+	create_crate(3, 3)
+	create_crate(4, 4)
+	create_crate(2, 4)
 
 func position_key(x, y):
 	return str(x) + "," + str(y)
@@ -31,10 +35,28 @@ func create_crate(x, y):
 	crate.position = Vector2(x * grid_cell_size, y * grid_cell_size)
 	crate.x = x
 	crate.y = y
+	if !filled.has(position_key(x, y)):
+		filled[position_key(x, y)] = true
+		create_fill(x, y)
 
+func create_fill(x, y):
+	var fill = fill_prefab.instance()
+	fill.z_index = 1
+	add_child(fill)
+	fill.position = Vector2(x * grid_cell_size, y * grid_cell_size)
+	
 func _process(_delta):
 	if Input.is_action_just_pressed("action1"):
 		run_next_step()
+	elif Input.is_action_just_pressed("action2"):
+		reset_grid()
+
+func reset_grid():
+	print("resetting grid")
+	filled = {}
+	for childCrate in get_children():
+		childCrate.queue_free()
+	_ready()
 
 func get_neighbors(grid, x, y):
 	var neighbors = []
