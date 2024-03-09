@@ -1,5 +1,6 @@
 extends KinematicBody2D
 
+onready var constants = load("res://games/CGOL/Constants.gd")
 var velocity = Vector2.ZERO
 var speed = 150
 
@@ -33,3 +34,8 @@ func _process(delta):
 		var node = collision.collider
 		if (node is KinematicBody2D):
 			node.push(velocity)
+
+func get_position():
+	var x = round(position.x / constants.grid_cell_size)
+	var y = round(position.y / constants.grid_cell_size)
+	return [x, y]

@@ -1,6 +1,6 @@
 extends KinematicBody2D
 
-var pushing = false
+var is_pushing = false
 
 onready var tween = get_parent().get_parent().get_node("Tween")
 onready var world = get_node("/root/CGLO_World")
@@ -9,16 +9,16 @@ var x = 0
 var y = 0
 
 func reset_pushing():
-	pushing = false
+	is_pushing = false
 
 func push(direction):
-	if pushing:
+	if is_pushing:
 		return
 
 	if test_move(transform, direction * 32):
 		return
 	
-	pushing = true
+	is_pushing = true
 
 	var newTween = Tween.new()
 	world.add_child(newTween)

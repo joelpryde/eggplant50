@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=2]
+[gd_scene load_steps=22 format=2]
 
 [ext_resource path="res://games/CGOL/assets/block_07.png" type="Texture" id=1]
 [ext_resource path="res://games/CGOL/Player.gd" type="Script" id=2]
@@ -15,6 +15,7 @@
 [ext_resource path="res://games/CGOL/assets/ground_06.png" type="Texture" id=13]
 [ext_resource path="res://games/CGOL/assets/player/player_10.png" type="Texture" id=14]
 [ext_resource path="res://games/CGOL/assets/player/player_09.png" type="Texture" id=15]
+[ext_resource path="res://games/CGOL/assets/sounds/pop.wav" type="AudioStream" id=16]
 [ext_resource path="res://games/CGOL/CrateParent.gd" type="Script" id=19]
 
 [sub_resource type="ConvexPolygonShape2D" id=4]
@@ -101,3 +102,6 @@ shape = SubResource( 3 )
 
 [node name="CrateParent" type="Node2D" parent="."]
 script = ExtResource( 19 )
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 16 )
