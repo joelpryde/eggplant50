@@ -5,16 +5,18 @@ onready var fill_prefab = load("res://games/CGOL/Fill.tscn")
 onready var constants = load("res://games/CGOL/Constants.gd")
 onready var audio_player = get_parent().get_node("AudioStreamPlayer")
 onready var player = get_parent().get_node("Player")
+onready var fill_parent = get_parent().get_node("FillParent")
 var tweens_completed = true
 var filled = {}
 
 func _ready():
-	create_crate(2, 2)
-	create_crate(1, 3)
-	create_crate(1, 4)
-	create_crate(3, 3)
-	create_crate(4, 4)
-	create_crate(2, 4)
+	var create_crate_start = 2
+	var create_crate_end = 5
+	for i in range(create_crate_start, create_crate_end+1):
+		create_crate(create_crate_start, i)
+		create_crate(create_crate_end, i)
+		create_crate(i, create_crate_start)
+		create_crate(i, create_crate_end)
 
 func position_key(x, y):
 	return str(x) + "," + str(y)
@@ -30,6 +32,7 @@ func build_grid():
 	return grid
 	
 func create_crate(x, y):
+	print("Creating crate at " + str(x) + ", " + str(y))
 	var crate = crate_prefab.instance()
 	add_child(crate)
 	crate.position = Vector2(x * constants.grid_cell_size, y * constants.grid_cell_size)
@@ -38,12 +41,13 @@ func create_crate(x, y):
 	create_fill(x, y)
 		
 func create_fill(x, y):
+	print("Creating fill at " + str(x) + ", " + str(y))
 	if filled.has(position_key(x, y)):
 		return
 	filled[position_key(x, y)] = true
 	var fill = fill_prefab.instance()
 	fill.z_index = 1
-	add_child(fill)
+	fill_parent.add_child(fill)
 	fill.position = Vector2(x * constants.grid_cell_size, y * constants.grid_cell_size)
 	
 func _process(_delta):
@@ -78,19 +82,18 @@ func run_next_step():
 	audio_player.play()
 	var grid = build_grid()
 	
-	# TODO: Need to check empty grid squares
-	for x in range(0, constants.grid_width+1):
-		for y in range(0, constants.grid_height+1):
+	for x in range(0, constants.grid_size+1):
+		for y in range(0, constants.grid_size+1):
+
 			var neighbors = get_neighbors(grid, x, y)
-			var live_neighbors = 0
-			for neighbor in neighbors:
-				live_neighbors += 1
-			if live_neighbors < 2 or live_neighbors > 3:
+			
+			if neighbors.size() < 2 or neighbors.size() > 3:	# Death case
 				var key = position_key(x, y)
-				if (	grid.has(key)):
+				if (grid.has(key)):
+					print("Killing crate at " + str(x) + ", " + str(y))
 					grid[key].queue_free()
 			else:
-				if live_neighbors == 3:
+				if neighbors.size() == 3: # Birth case
 					# Don't create crate if player is in this space!
 					var player_pos = player.get_position()
 					if player_pos[0] == x and player_pos[1] == y:
@@ -105,7 +108,7 @@ func tweenCompleted(_crate, tween):
 	print("all completed")
 	tweens_completed = true
 	for childCrate in get_children():
-		if childCrate is KinematicBody2D:
+		if childCrate is Crate:
 			if (childCrate.is_pushing):
 				childCrate.reset_pushing()
 				create_fill(childCrate.x, childCrate.y)

@@ -4,7 +4,7 @@
 [ext_resource path="res://games/CGOL/assets/crate_42.png" type="Texture" id=2]
 
 [sub_resource type="RectangleShape2D" id=5]
-extents = Vector2( 24, 24 )
+extents = Vector2( 26, 26 )
 
 [node name="Crate" type="KinematicBody2D"]
 position = Vector2( 96, 96 )

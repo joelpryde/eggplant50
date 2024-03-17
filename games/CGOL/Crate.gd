@@ -1,3 +1,4 @@
+class_name Crate
 extends KinematicBody2D
 
 var is_pushing = false

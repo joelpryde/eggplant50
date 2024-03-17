@@ -3,7 +3,6 @@
 [ext_resource path="res://games/CGOL/assets/environment_06.png" type="Texture" id=1]
 
 [node name="Target" type="Sprite"]
-position = Vector2( 256, 160 )
 scale = Vector2( 0.5, 0.5 )
 texture = ExtResource( 1 )
 centered = false
