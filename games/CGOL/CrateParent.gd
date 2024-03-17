@@ -115,6 +115,9 @@ func run_next_step():
 	for x in range(0, constants.grid_size+1):
 		for y in range(0, constants.grid_size+1):
 
+			if (x < 1 or x >= constants.grid_size or y < 1 or y > constants.grid_size):
+				continue
+
 			var neighbors = get_neighbors(grid, x, y)
 			
 			if neighbors.size() < 2 or neighbors.size() > 3:	# Death case
