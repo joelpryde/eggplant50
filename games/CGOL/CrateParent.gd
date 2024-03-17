@@ -9,7 +9,7 @@ onready var fill_parent = get_parent().get_node("FillParent")
 var tweens_completed = true
 var filled = {}
 
-func _ready():
+func create_box_level():
 	var create_crate_start = 2
 	var create_crate_end = 5
 	for i in range(create_crate_start, create_crate_end+1):
@@ -17,6 +17,37 @@ func _ready():
 		create_crate(create_crate_end, i)
 		create_crate(i, create_crate_start)
 		create_crate(i, create_crate_end)
+
+    # left top
+	create_fill(2,1)
+	create_fill(2,2)
+	create_fill(1,2)
+
+	# right top
+	create_fill(5,1)
+	create_fill(5,2)
+	create_fill(6,2)
+
+	# bottom left
+	create_fill(2,6)
+	create_fill(2,5)
+	create_fill(1,5)
+
+	# bottom right
+	create_fill(5,6)
+	create_fill(5,5)
+	create_fill(6,5)
+
+func create_cross_level():
+	create_crate(3, 4)
+	create_crate(4, 4)
+	create_crate(5, 3)
+	create_fill(4, 3)
+	create_fill(4, 4)
+	create_fill(4, 5)
+
+func _ready():
+	create_box_level()
 
 func position_key(x, y):
 	return str(x) + "," + str(y)
@@ -38,7 +69,6 @@ func create_crate(x, y):
 	crate.position = Vector2(x * constants.grid_cell_size, y * constants.grid_cell_size)
 	crate.x = x
 	crate.y = y
-	create_fill(x, y)
 		
 func create_fill(x, y):
 	print("Creating fill at " + str(x) + ", " + str(y))
@@ -111,7 +141,6 @@ func tweenCompleted(_crate, tween):
 		if childCrate is Crate:
 			if (childCrate.is_pushing):
 				childCrate.reset_pushing()
-				create_fill(childCrate.x, childCrate.y)
 
 	tween.queue_free()
 
