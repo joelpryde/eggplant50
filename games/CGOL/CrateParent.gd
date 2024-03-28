@@ -73,7 +73,11 @@ func load_level(data):
 					create_crate(x, y)
 				elif c == "g":
 					create_goal(x, y)
-				else:
+				elif c == "s":
+					player.set_position(Vector2(
+						x * constants.grid_cell_size + constants.grid_cell_size/2, 
+						y * constants.grid_cell_size + constants.grid_cell_size/2))
+				elif c != "0":
 					print("Unknown character in level data: " + c)
 
 func load_current_level():
@@ -82,6 +86,7 @@ func load_current_level():
 
 func _ready():
 	# create_box_level()
+	print("ready")
 	load_current_level()
 
 func position_key(x, y):
@@ -119,19 +124,16 @@ func _process(_delta):
 	if Input.is_action_just_pressed("action1"):
 		run_next_step()
 	elif Input.is_action_just_pressed("action2"):
-		reset_grid()
-	elif Input.is_key_pressed(KEY_R):
-		reset_grid()
+		clear_grid()
 		load_current_level()
-
-func reset_grid():
+		
+func clear_grid():
 	print("resetting grid")
 	for fill in fill_parent.get_children():
 		fill.queue_free()
 	filled = {}
 	for childCrate in get_children():
 		childCrate.queue_free()
-	_ready()
 
 func get_neighbors(grid, x, y):
 	var neighbors = []

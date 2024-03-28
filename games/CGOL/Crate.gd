@@ -14,9 +14,11 @@ func reset_pushing():
 
 func push(direction):
 	if is_pushing:
+		print("already pushing")
 		return
 
 	if test_move(transform, direction * 32):
+		print("can't move from " + str(position) + " to " + str(position + direction * 32))
 		return
 	
 	is_pushing = true
