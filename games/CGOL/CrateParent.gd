@@ -3,6 +3,7 @@ extends Node2D
 onready var crate_prefab = load("res://games/CGOL/Crate.tscn")
 onready var fill_prefab = load("res://games/CGOL/Fill.tscn")
 onready var constants = load("res://games/CGOL/Constants.gd")
+onready var current_level_path = "res://games/CGOL/assets/levels/level1.csv"
 onready var audio_player = get_parent().get_node("AudioStreamPlayer")
 onready var player = get_parent().get_node("Player")
 onready var fill_parent = get_parent().get_node("FillParent")
@@ -19,35 +20,69 @@ func create_box_level():
 		create_crate(i, create_crate_end)
 
     # left top
-	create_fill(2,1)
-	create_fill(2,2)
-	create_fill(1,2)
+	create_goal(2,1)
+	create_goal(2,2)
+	create_goal(1,2)
 
 	# right top
-	create_fill(5,1)
-	create_fill(5,2)
-	create_fill(6,2)
+	create_goal(5,1)
+	create_goal(5,2)
+	create_goal(6,2)
 
 	# bottom left
-	create_fill(2,6)
-	create_fill(2,5)
-	create_fill(1,5)
+	create_goal(2,6)
+	create_goal(2,5)
+	create_goal(1,5)
 
 	# bottom right
-	create_fill(5,6)
-	create_fill(5,5)
-	create_fill(6,5)
+	create_goal(5,6)
+	create_goal(5,5)
+	create_goal(6,5)
 
 func create_cross_level():
 	create_crate(3, 4)
 	create_crate(4, 4)
 	create_crate(5, 3)
-	create_fill(4, 3)
-	create_fill(4, 4)
-	create_fill(4, 5)
+	create_goal(4, 3)
+	create_goal(4, 4)
+	create_goal(4, 5)
+
+func read_level_file(path):
+	var data = []
+	var file = File.new()
+	if (file.open(path, File.READ) != OK):
+		print("Failed to open file")
+		return data
+
+	while not file.eof_reached():
+		var data_row = []
+		var line = file.get_line()
+		var rows = line.split(",", false)
+		for row in rows:
+			data_row.append(row)
+		data.append(data_row)
+
+	file.close()
+	return data
+
+func load_level(data):
+	for y in range(data.size()):
+		for x in range(data[y].size()):
+			for c in data[y][x]:
+				if c == "c":
+					create_crate(x, y)
+				elif c == "g":
+					create_goal(x, y)
+				else:
+					print("Unknown character in level data: " + c)
+
+func load_current_level():
+	var level_data = read_level_file(current_level_path)
+	load_level(level_data)
 
 func _ready():
-	create_box_level()
+	# create_box_level()
+	load_current_level()
 
 func position_key(x, y):
 	return str(x) + "," + str(y)
@@ -70,7 +105,7 @@ func create_crate(x, y):
 	crate.x = x
 	crate.y = y
 		
-func create_fill(x, y):
+func create_goal(x, y):
 	print("Creating fill at " + str(x) + ", " + str(y))
 	if filled.has(position_key(x, y)):
 		return
@@ -85,9 +120,14 @@ func _process(_delta):
 		run_next_step()
 	elif Input.is_action_just_pressed("action2"):
 		reset_grid()
+	elif Input.is_key_pressed(KEY_R):
+		reset_grid()
+		load_current_level()
 
 func reset_grid():
 	print("resetting grid")
+	for fill in fill_parent.get_children():
+		fill.queue_free()
 	filled = {}
 	for childCrate in get_children():
 		childCrate.queue_free()
